@@ -6,7 +6,7 @@ import Image from "next/image";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
+export default function UserPage() {
   return (
     <>
       <Head>
@@ -16,7 +16,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        登录
+        user
       </main>
     </>
   );
