@@ -3,6 +3,8 @@ import styles from "@/styles/Home.module.css";
 import { Inter } from "next/font/google";
 import Head from "next/head";
 import Image from "next/image";
+import { Button } from 'antd';
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +18,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        这是index
+        <Button type="dashed">test</Button>
       </main>
     </>
   );

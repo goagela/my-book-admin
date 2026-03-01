@@ -6,10 +6,10 @@ import Image from "next/image";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function LoginPage() {
+export default function BookPage() {
   return (
     <>
-      login
+      catadd
     </>
   );
 }
