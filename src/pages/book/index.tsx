@@ -1,4 +1,8 @@
-import { Button, Col, Form, Input, Row, Select, Space, Table } from "antd";
+import { getBookList } from "@/api/book";
+import { BookQueryType } from "@/type";
+import { Button, Col, Form, Input, Row, Select, Space, Table, Image } from "antd";
+import axios from "axios";
+import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { log } from "node:console";
 import { useEffect, useState } from "react";
@@ -10,18 +14,35 @@ import { useEffect, useState } from "react";
 export default function BookPage() {
   const [form] = Form.useForm()
   const router = useRouter()
-  const handleSearchFinish = (a: any) => {
-    console.log(a);
 
+  const handleSearchFinish = (searchParams: BookQueryType) => {
+    getBookList({ ...searchParams, current: 1, pageSize: pagination.pageSize }).then(
+      (res) => {
+        setBookDataSource(res.data)
+        setPagination({ ...pagination, total: res.total, current: 1 })
+      }
+    )
   }
   const handleSearchReset = () => {
     form.resetFields()
+    getBookList({
+      current: 1,
+      pageSize: pagination.pageSize
+    }).then((res) => {
+      setBookDataSource(res.data)
+    })
   }
   const handleBookEdit = () => {
     router.push('/book/edit/id')
   }
-  const handleTableChange = (e: any) => {
-    setPagination(e)
+  const handleTableChange = (newPagination: any) => {
+    setPagination(newPagination)
+    const query = form.getFieldsValue()
+    getBookList({
+      current: newPagination.current,
+      pageSize: newPagination.pageSize,
+      ...query
+    })
   }
 
   const options =
@@ -31,86 +52,107 @@ export default function BookPage() {
       { value: 'Yiminghe', label: 'yiminghe' },
       { value: 'disabled', label: 'Disabled', disabled: true },
     ]
-  const dataSource = [
-    {
-      key: '1',
-      name: '胡彦斌',
-      age: 32,
-      address: '西湖区湖底公园1号',
-    },
-    {
-      key: '2',
-      name: '胡彦祖',
-      age: 42,
-      address: '西湖区湖底公园1号',
-    },
-    {
-      key: '3',
-      name: '胡彦祖',
-      age: 42,
-      address: '西湖区湖底公园1号',
-    },
-    {
-      key: '4',
-      name: '胡彦祖',
-      age: 42,
-      address: '西湖区湖底公园1号',
-    },
-    {
-      key: '5',
-      name: '胡彦祖',
-      age: 42,
-      address: '西湖区湖底公园1号',
-    },
-    {
-      key: '6',
-      name: '胡彦祖',
-      age: 42,
-      address: '西湖区湖底公园1号',
-    },
-    {
-      key: '7',
-      name: '胡彦祖',
-      age: 42,
-      address: '西湖区湖底公园1号',
-    },
-    {
-      key: '8',
-      name: 'aaa',
-      age: 42,
-      address: '西湖区湖底公园1号',
-    },
-    {
-      key: '9',
-      name: '胡彦祖',
-      age: 42,
-      address: '西湖区湖底公园1号',
-    },
-    {
-      key: '10',
-      name: 'aaa',
-      age: 42,
-      address: '西湖区湖底公园1号',
-    },
-    {
-      key: '11',
-      name: '胡彦祖',
-      age: 42,
-      address: '西湖区湖底公园1号',
-    },
-    {
-      key: '12',
-      name: 'aaa',
-      age: 42,
-      address: '西湖区湖底公园1号',
-    },
-    {
-      key: '13',
-      name: '胡彦祖',
-      age: 42,
-      address: '西湖区湖底公园1号',
-    },
-  ];
+
+
+  useEffect(() => {
+    async function fetchData() {
+      const res = await getBookList({
+        current: 1,
+        pageSize: pagination.pageSize
+      })
+      setBookDataSource(res.data)
+      setPagination({ ...pagination, total: res.total })
+    }
+    fetchData()
+  }, [])
+
+  const [dataSource, setDataSource] = useState<any>([])
+  const setBookDataSource = (data: any[]) => {
+    const processedData = data.map((item: any) => (
+      { ...item, key: item._id }
+    ))
+    setDataSource(processedData)
+  }
+  // const dataSource = [
+  //   {
+  //     key: '1',
+  //     name: '胡彦斌',
+  //     age: 32,
+  //     address: '西湖区湖底公园1号',
+  //   },
+  //   {
+  //     key: '2',
+  //     name: '胡彦祖',
+  //     age: 42,
+  //     address: '西湖区湖底公园1号',
+  //   },
+  //   {
+  //     key: '3',
+  //     name: '胡彦祖',
+  //     age: 42,
+  //     address: '西湖区湖底公园1号',
+  //   },
+  //   {
+  //     key: '4',
+  //     name: '胡彦祖',
+  //     age: 42,
+  //     address: '西湖区湖底公园1号',
+  //   },
+  //   {
+  //     key: '5',
+  //     name: '胡彦祖',
+  //     age: 42,
+  //     address: '西湖区湖底公园1号',
+  //   },
+  //   {
+  //     key: '6',
+  //     name: '胡彦祖',
+  //     age: 42,
+  //     address: '西湖区湖底公园1号',
+  //   },
+  //   {
+  //     key: '7',
+  //     name: '胡彦祖',
+  //     age: 42,
+  //     address: '西湖区湖底公园1号',
+  //   },
+  //   {
+  //     key: '8',
+  //     name: 'aaa',
+  //     age: 42,
+  //     address: '西湖区湖底公园1号',
+  //   },
+  //   {
+  //     key: '9',
+  //     name: '胡彦祖',
+  //     age: 42,
+  //     address: '西湖区湖底公园1号',
+  //   },
+  //   {
+  //     key: '10',
+  //     name: 'aaa',
+  //     age: 42,
+  //     address: '西湖区湖底公园1号',
+  //   },
+  //   {
+  //     key: '11',
+  //     name: '胡彦祖',
+  //     age: 42,
+  //     address: '西湖区湖底公园1号',
+  //   },
+  //   {
+  //     key: '12',
+  //     name: 'aaa',
+  //     age: 42,
+  //     address: '西湖区湖底公园1号',
+  //   },
+  //   {
+  //     key: '13',
+  //     name: '胡彦祖',
+  //     age: 42,
+  //     address: '西湖区湖底公园1号',
+  //   },
+  // ];
 
   const columns = [
     {
@@ -120,8 +162,15 @@ export default function BookPage() {
     },
     {
       title: '封面',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'cover',
+      key: 'cover',
+      render: (text: string) => {
+        return <Image
+          width={70}
+          height={80}
+          src="text"
+        />
+      }
     },
     {
       title: '作者',
@@ -135,18 +184,21 @@ export default function BookPage() {
     },
     {
       title: '描述',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'description',
+      key: 'description',
     },
     {
       title: '库存',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'stock',
+      key: 'stock',
     },
     {
       title: '创建时间',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      render: (ts: any) => (
+        dayjs(ts).format('YYYY-MM-DD')
+      )
     },
     {
       title: '操作',
@@ -161,9 +213,10 @@ export default function BookPage() {
 
   ];
   const [pagination, setPagination] = useState({
+    current: 1,
     pageSize: 20,
     showSizeChanger: true,
-    total: dataSource.length,
+    total: 0,
   })
 
   return (
@@ -211,15 +264,12 @@ export default function BookPage() {
         <Table
           dataSource={dataSource}
           columns={columns}
-          scroll={{ x: 1000 }}
+          scroll={{ x: 1000, y: 'calc(100% - 76px)' }}
           pagination={{ ...pagination, showTotal: () => `共${pagination.total}条` }}
           onChange={handleTableChange}
         />
       </div>
     </>
   );
-}
-function axios(method: any, arg1: string, url: any, arg3: string) {
-  throw new Error("Function not implemented.");
 }
 
