@@ -93,7 +93,7 @@ export default function MyLayout({ children }: { children: React.ReactNode }) {
           <Dropdown menu={{ items: userItems }} trigger={['click']}>
             <a onClick={(e) => e.preventDefault()}>
               <Space>
-                用户名
+                我的用户名
                 <DownOutlined />
               </Space>
             </a>

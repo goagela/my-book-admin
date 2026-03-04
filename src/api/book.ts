@@ -1,12 +1,16 @@
 import { BookQueryType } from "@/type"
+import request from "@/utils/request"
+//request就是request.ts中返回的instance
 import axios from "axios"
 
-// 使用命名导出，避免默认导入兼容问题
 export async function getBookList(params?: BookQueryType) {
-  const res = await axios({
-    method: 'get',
-    url: 'https://mock.apifox.cn/m1/2398938-0-default/api/books',
-    params
-  })
-  return res.data
+  // const res = await request({
+  //   method: 'get',
+  //   url: '/api/books',
+  //   params
+  // })
+  const res: any = await request.get(
+    '/api/books', { params }
+  )
+  return res
 }  
