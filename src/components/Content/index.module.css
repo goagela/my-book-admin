@@ -1,0 +1,17 @@
+.content {
+  background-color: white;
+  margin-top: 20px;
+  border-radius: 15px;
+  padding: 30px;
+  padding-bottom: 0;
+}
+
+.title {
+  font-size: 24px;
+  color: #487bd7;
+  font-weight: bold;
+}
+
+.button {
+  float: right;
+}

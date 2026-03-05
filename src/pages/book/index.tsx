@@ -1,4 +1,5 @@
 import { getBookList } from "@/api/book";
+import Content from "@/components/Content";
 import { BookQueryType } from "@/type";
 import { Button, Col, Form, Input, Row, Select, Space, Table, Image } from "antd";
 import axios from "axios";
@@ -73,64 +74,128 @@ export default function BookPage() {
     ))
     setDataSource(processedData)
   }
+  // const columns = [
+  //   {
+  //     title: '名称',
+  //     dataIndex: 'name',
+  //     key: 'name',
+  //     minWidth: 120,
+  //   },
+  //   {
+  //     title: '封面',
+  //     dataIndex: 'cover',
+  //     key: 'cover',
+  //     minwdith: 100,
+  //     render: (text: string) => {
+  //       return <Image
+  //         width={70}
+  //         height={80}
+  //         src="text"
+  //       />
+  //     }
+  //   },
+  //   {
+  //     title: '作者',
+  //     dataIndex: 'author',
+  //     key: 'author',
+  //     minWidth: 100,
+
+  //   },
+  //   {
+  //     title: '分类',
+  //     dataIndex: 'address',
+  //     key: 'address',
+  //     minWidth: 100,
+  //   },
+  //   {
+  //     title: '描述',
+  //     dataIndex: 'description',
+  //     key: 'description',
+  //     minWidth: 300,
+  //   },
+  //   {
+  //     title: '库存',
+  //     dataIndex: 'stock',
+  //     key: 'stock',
+  //     minWidth: 100,
+  //   },
+  //   {
+  //     title: '创建时间',
+  //     dataIndex: 'createdAt',
+  //     key: 'createdAt',
+  //     minWidth: 100,
+  //     render: (ts: any) => (
+  //       dayjs(ts).format('YYYY-MM-DD')
+  //     )
+  //   },
+  //   {
+  //     title: '操作',
+  //     key: 'action',
+  //     render: () => (
+  //       <Space size="middle">
+  //         <Button onClick={handleBookEdit} color="primary" variant='link'>编辑</Button>
+  //         <Button color="danger" variant='link'>删除</Button>
+  //       </Space>
+  //     )
+  //   },
+  // ];
   const columns = [
     {
       title: '名称',
       dataIndex: 'name',
       key: 'name',
+      width: 150,      // 固定宽度
+      minWidth: 100,    // 最小宽度
     },
     {
       title: '封面',
       dataIndex: 'cover',
       key: 'cover',
+      width: 100,
+      minWidth: 100,
       render: (text: string) => {
-        return <Image
-          width={70}
-          height={80}
-          src="text"
-        />
+        return <Image width={70} height={80} src={text} />
       }
     },
     {
       title: '作者',
       dataIndex: 'author',
       key: 'author',
+      width: 100,
+      minWidth: 80,
     },
     {
       title: '分类',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'category',
+      key: 'category',
+      width: 100,
+      minWidth: 100,
     },
     {
       title: '描述',
       dataIndex: 'description',
       key: 'description',
+      width: 400,
+      minWidth: 300,
     },
     {
       title: '库存',
       dataIndex: 'stock',
       key: 'stock',
+      width: 100,
+      minWidth: 100,
     },
     {
       title: '创建时间',
       dataIndex: 'createdAt',
       key: 'createdAt',
+      width: 150,
+      minWidth: 150,
       render: (ts: any) => (
         dayjs(ts).format('YYYY-MM-DD')
       )
-    },
-    {
-      title: '操作',
-      key: 'action',
-      render: () => (
-        <Space size="middle">
-          <Button onClick={handleBookEdit} color="primary" variant='link'>编辑</Button>
-          <Button color="danger" variant='link'>删除</Button>
-        </Space>
-      )
-    },
-
-  ];
+    }
+  ]
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 20,
@@ -139,7 +204,7 @@ export default function BookPage() {
   })
 
   return (
-    <>
+    <Content title='图书列表' btn='添加'>
       <Form
         form={form}
         name="customized_form_controls"
@@ -170,7 +235,6 @@ export default function BookPage() {
               <Space>
                 <Button type="primary" htmlType="submit">
                   搜索
-
                 </Button>
                 <Button onClick={handleSearchReset}>
                   清空
@@ -180,16 +244,16 @@ export default function BookPage() {
           </Col>
         </Row>
       </Form>
-      <div style={{ height: 'calc(100% - 76px)', overflow: 'auto' }}>
+      <div style={{ height: 'calc(100% - 76px)' }}>
         <Table
           dataSource={dataSource}
           columns={columns}
-          scroll={{ x: 1000 }}
+          scroll={{ x: 1250, y: 'calc(100vh - 350px)' }}
           pagination={{ ...pagination, showTotal: () => `共${pagination.total}条` }}
           onChange={handleTableChange}
         />
       </div>
-    </>
+    </Content>
   );
 }
 

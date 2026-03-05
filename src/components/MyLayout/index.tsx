@@ -11,24 +11,6 @@ const { Header, Content, Sider } = Layout;
 
 
 
-// const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOutlined].map(
-//   (icon, index) => {
-//     const key = String(index + 1);
-
-//     return {
-//       key: `sub${key}`,
-//       icon: React.createElement(icon),
-//       label: `subnav ${key}`,
-//       children: Array.from({ length: 4 }).map((_, j) => {
-//         const subKey = index * 4 + j + 1;
-//         return {
-//           key: subKey,
-//           label: `option${subKey}`,
-//         };
-//       }),
-//     };
-//   },
-// );
 
 const myItem = [
   {
@@ -81,9 +63,8 @@ export default function MyLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const handleMenuClick = function ({ key }: any) {
     router.push(key)
-
   }
-
+  const activeMenu = router.pathname
   return (
     <Layout>
       <Header className={styles.header}>
@@ -106,6 +87,7 @@ export default function MyLayout({ children }: { children: React.ReactNode }) {
             mode="inline"
             defaultSelectedKeys={['/book']}
             defaultOpenKeys={['book']}
+            selectedKeys={[activeMenu]}
             style={{ height: '100%', borderInlineEnd: 0 }}
             items={myItem}
             onClick={handleMenuClick}

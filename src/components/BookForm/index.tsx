@@ -1,0 +1,92 @@
+import React, { useState } from 'react';
+import {
+  Button,
+  DatePicker,
+  Form,
+  Input,
+  InputNumber,
+  Select,
+  Space,
+  Image,
+  message
+} from 'antd';
+import { BookCreateType } from '@/type';
+import { bookAdd } from '@/api/book';
+import { log } from 'console';
+import { useRouter } from 'next/router';
+import styles from './index.module.css'
+import dayjs from 'dayjs';
+
+const { RangePicker } = DatePicker;
+const { TextArea } = Input;
+
+const normFile = (e: any) => {
+  if (Array.isArray(e)) {
+    return e;
+  }
+  return e?.fileList;
+};
+
+
+export default function BookPage() {
+  const [form] = Form.useForm()
+  const [preImage, setPreImage] = useState('')
+  const router = useRouter()
+  const handleFinish = async (params: BookCreateType) => {
+    if (params.publishedAt) {
+      params.publishedAt = dayjs(params.publishedAt).valueOf()
+    }//将提交的时间格式变为时间戳
+    await bookAdd(params)
+    message.success('添加成功', 1.5)
+    router.push('/book')
+  }
+
+  return (
+    <>
+      <Form
+        className={styles.form}
+        onFinish={handleFinish}
+        form={form}
+        labelCol={{ span: 2 }}
+        wrapperCol={{ span: 20 }}
+        layout="horizontal"
+
+      >
+        <Form.Item label="名称" name='name' rules={[{ required: true, message: '请输入名称' }]}>
+          <Input placeholder='请输入' />
+        </Form.Item>
+        <Form.Item label="作者" name='author' rules={[{ required: true, message: '请输入作者' }]}>
+          <Input placeholder='请输入' />
+        </Form.Item>
+        <Form.Item label="分类" name='category' rules={[{ required: true, message: '请选择分类' }]}>
+          <Select placeholder='请选择' options={[{ label: 'Demo', value: 'demo' }]} />
+        </Form.Item>
+        <Form.Item label="封面" name='cover'>
+          <Space.Compact style={{ marginBottom: 10 }}>
+            <Input placeholder='请输入' onChange={(e) => {
+              form.setFieldValue('cover', e.target.value)
+            }} />
+            <Button
+              onClick={() => {
+                setPreImage(form.getFieldValue('cover'))
+              }}>预览</Button>
+          </Space.Compact>
+          {preImage && <Image src={preImage} style={{ width: 150, height: 200 }} />}
+        </Form.Item>
+        <Form.Item label="出版日期" name='publishedAt'>
+          <DatePicker placeholder='请选择' />
+        </Form.Item>
+
+        <Form.Item label="库存" name='stock'>
+          <InputNumber placeholder='请输入' />
+        </Form.Item>
+        <Form.Item label="描述" name='description'>
+          <TextArea placeholder='请输入' rows={4} />
+        </Form.Item>
+        <Form.Item label=" " colon={false}>
+          <Button className={styles.btn} type='primary' htmlType="submit">创建</Button>
+        </Form.Item>
+      </Form>
+    </>
+  );
+}
