@@ -14,3 +14,8 @@ export async function bookAdd(params: BookCreateType) {
   const res: any = await request.post('/api/books', params)
   return res
 }
+
+export async function bookDelete(id: string) {
+  const res: any = await request.delete(`/api/books/${id}`)
+  return res
+}

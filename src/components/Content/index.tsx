@@ -3,7 +3,7 @@ import styles from './index.module.css'
 import { useRouter } from 'next/router';
 
 
-export default function Content({ children, title, btn }: { children: React.ReactNode; title: React.ReactNode, btn?: React.ReactNode }) {
+export default function Content({ children, title, btn, route }: { children: React.ReactNode; title: React.ReactNode, btn?: React.ReactNode, route?: string }) {
   const router = useRouter()
   return (
     <>
@@ -14,7 +14,7 @@ export default function Content({ children, title, btn }: { children: React.Reac
             type='primary'
             className={styles.button}
             onClick={() => {
-              router.push('/book/add')
+              if (route) { router.push(route) }
             }}>
             {btn}
           </Button>}

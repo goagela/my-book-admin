@@ -1,7 +1,7 @@
-import { getBookList } from "@/api/book";
+import { bookDelete, getBookList } from "@/api/book";
 import Content from "@/components/Content";
-import { BookQueryType } from "@/type";
-import { Button, Col, Form, Input, Row, Select, Space, Table, Image } from "antd";
+import { BookQueryType, CategoryQueryType } from "@/type";
+import { Button, Col, Form, Input, Row, Select, Space, Table, Image, Modal, message } from "antd";
 import axios from "axios";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
@@ -16,7 +16,7 @@ export default function BookPage() {
   const [form] = Form.useForm()
   const router = useRouter()
 
-  const handleSearchFinish = (searchParams: BookQueryType) => {
+  const handleSearchFinish = (searchParams: CategoryQueryType) => {
     getBookList({ ...searchParams, current: 1, pageSize: pagination.pageSize }).then(
       (res) => {
         setBookDataSource(res.data)
@@ -53,17 +53,29 @@ export default function BookPage() {
       { value: 'Yiminghe', label: 'yiminghe' },
       { value: 'disabled', label: 'Disabled', disabled: true },
     ]
+  const handleBookDelete = (row: any) => {
+    Modal.confirm({
+      title: `确认删除书籍《${row.name}》吗？`,
+      okText: '确定',
+      cancelText: '取消',
+      async onOk() {
+        await bookDelete(row._id)
+        message.success('删除成功')
+        fetchData(form.getFieldsValue())
+      }
+    })
+  }
 
-
+  async function fetchData(values?: BookQueryType) {
+    const res = await getBookList({
+      current: pagination.current,
+      pageSize: pagination.pageSize,
+      ...values
+    })
+    setBookDataSource(res.data)
+    setPagination({ ...pagination, total: res.total })
+  }
   useEffect(() => {
-    async function fetchData() {
-      const res = await getBookList({
-        current: 1,
-        pageSize: pagination.pageSize
-      })
-      setBookDataSource(res.data)
-      setPagination({ ...pagination, total: res.total })
-    }
     fetchData()
   }, [])
 
@@ -74,71 +86,7 @@ export default function BookPage() {
     ))
     setDataSource(processedData)
   }
-  // const columns = [
-  //   {
-  //     title: '名称',
-  //     dataIndex: 'name',
-  //     key: 'name',
-  //     minWidth: 120,
-  //   },
-  //   {
-  //     title: '封面',
-  //     dataIndex: 'cover',
-  //     key: 'cover',
-  //     minwdith: 100,
-  //     render: (text: string) => {
-  //       return <Image
-  //         width={70}
-  //         height={80}
-  //         src="text"
-  //       />
-  //     }
-  //   },
-  //   {
-  //     title: '作者',
-  //     dataIndex: 'author',
-  //     key: 'author',
-  //     minWidth: 100,
 
-  //   },
-  //   {
-  //     title: '分类',
-  //     dataIndex: 'address',
-  //     key: 'address',
-  //     minWidth: 100,
-  //   },
-  //   {
-  //     title: '描述',
-  //     dataIndex: 'description',
-  //     key: 'description',
-  //     minWidth: 300,
-  //   },
-  //   {
-  //     title: '库存',
-  //     dataIndex: 'stock',
-  //     key: 'stock',
-  //     minWidth: 100,
-  //   },
-  //   {
-  //     title: '创建时间',
-  //     dataIndex: 'createdAt',
-  //     key: 'createdAt',
-  //     minWidth: 100,
-  //     render: (ts: any) => (
-  //       dayjs(ts).format('YYYY-MM-DD')
-  //     )
-  //   },
-  //   {
-  //     title: '操作',
-  //     key: 'action',
-  //     render: () => (
-  //       <Space size="middle">
-  //         <Button onClick={handleBookEdit} color="primary" variant='link'>编辑</Button>
-  //         <Button color="danger" variant='link'>删除</Button>
-  //       </Space>
-  //     )
-  //   },
-  // ];
   const columns = [
     {
       title: '名称',
@@ -151,7 +99,7 @@ export default function BookPage() {
       title: '封面',
       dataIndex: 'cover',
       key: 'cover',
-      width: 100,
+      width: 150,
       minWidth: 100,
       render: (text: string) => {
         return <Image width={70} height={80} src={text} />
@@ -161,14 +109,14 @@ export default function BookPage() {
       title: '作者',
       dataIndex: 'author',
       key: 'author',
-      width: 100,
-      minWidth: 80,
+      width: 150,
+      minWidth: 100,
     },
     {
       title: '分类',
       dataIndex: 'category',
       key: 'category',
-      width: 100,
+      width: 150,
       minWidth: 100,
     },
     {
@@ -182,7 +130,7 @@ export default function BookPage() {
       title: '库存',
       dataIndex: 'stock',
       key: 'stock',
-      width: 100,
+      width: 150,
       minWidth: 100,
     },
     {
@@ -190,11 +138,25 @@ export default function BookPage() {
       dataIndex: 'createdAt',
       key: 'createdAt',
       width: 150,
-      minWidth: 150,
+      minWidth: 100,
       render: (ts: any) => (
         dayjs(ts).format('YYYY-MM-DD')
       )
-    }
+    },
+    {
+      title: '操作',
+      key: 'action',
+      width: 150,
+      minwidth: 100,
+      render: (_: any, row: any) => (
+        <Space size="middle">
+          <Button onClick={handleBookEdit} color="primary" variant='link'>编辑</Button>
+          <Button color="danger" variant='link' onClick={() => {
+            handleBookDelete(row)
+          }}>删除</Button>
+        </Space>
+      )
+    },
   ]
   const [pagination, setPagination] = useState({
     current: 1,
@@ -204,7 +166,7 @@ export default function BookPage() {
   })
 
   return (
-    <Content title='图书列表' btn='添加'>
+    <Content title='图书列表' btn='添加' route="/book/add">
       <Form
         form={form}
         name="customized_form_controls"
