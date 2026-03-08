@@ -4,3 +4,8 @@ export interface CategoryQueryType {
   current?: number,
   pageSize?: number
 }
+export interface CategoryCreateType {
+  name: string,
+  level: number,
+  parent?: string
+}

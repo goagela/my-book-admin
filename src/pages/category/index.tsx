@@ -33,8 +33,8 @@ export default function CategoryPage() {
       setCategoryDataSource(res.data)
     })
   }
-  const handleCategoryEdit = () => {
-    router.push('/category/edit/id')
+  const handleCategoryEdit = (id: string) => {
+    router.push(`/category/edit/${id}`)
   }
   const handleTableChange = (newPagination: any) => {
     setPagination(newPagination)
@@ -77,7 +77,6 @@ export default function CategoryPage() {
     setPagination({ ...pagination, total: res.total })
   }
   useEffect(() => {
-
     fetchData()
   }, [])
 
@@ -133,7 +132,9 @@ export default function CategoryPage() {
       minwidth: 100,
       render: (_: any, row: any) => (
         <Space size="middle">
-          <Button onClick={handleCategoryEdit} color="primary" variant='link'>编辑</Button>
+          <Button color="primary" variant='link' onClick={() => {
+            handleCategoryEdit(row._id)
+          }}>编辑</Button>
           <Button color="danger" variant='link' onClick={() => {
             handleCategoryDelete(row)
           }}>删除</Button>

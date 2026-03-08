@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   DatePicker,
@@ -10,28 +10,22 @@ import {
   Image,
   message
 } from 'antd';
-import { BookCreateType } from '@/type';
+import { BookCreateType, CategoryQueryType } from '@/type';
 import { bookAdd } from '@/api/book';
 import { log } from 'console';
 import { useRouter } from 'next/router';
 import styles from './index.module.css'
 import dayjs from 'dayjs';
+import { getCategoryList } from '@/api/category';
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
-
-const normFile = (e: any) => {
-  if (Array.isArray(e)) {
-    return e;
-  }
-  return e?.fileList;
-};
-
 
 export default function BookPage() {
   const [form] = Form.useForm()
   const [preImage, setPreImage] = useState('')
   const router = useRouter()
+  const [categoryList, setCategoryList] = useState<CategoryQueryType[]>()
   const handleFinish = async (params: BookCreateType) => {
     if (params.publishedAt) {
       params.publishedAt = dayjs(params.publishedAt).valueOf()
@@ -40,6 +34,11 @@ export default function BookPage() {
     message.success('添加成功', 1.5)
     router.push('/book')
   }
+  useEffect(() => {
+    getCategoryList().then((res: any) => {
+      setCategoryList(res.data.map((item: any) => ({ label: item.name, value: item._id })))
+    })
+  }, [])
 
   return (
     <>
@@ -59,7 +58,7 @@ export default function BookPage() {
           <Input placeholder='请输入' />
         </Form.Item>
         <Form.Item label="分类" name='category' rules={[{ required: true, message: '请选择分类' }]}>
-          <Select placeholder='请选择' options={[{ label: 'Demo', value: 'demo' }]} />
+          <Select placeholder='请选择' options={categoryList} />
         </Form.Item>
         <Form.Item label="封面" name='cover'>
           <Space.Compact style={{ marginBottom: 10 }}>
@@ -90,3 +89,6 @@ export default function BookPage() {
     </>
   );
 }
+
+//图书添加页面模板
+

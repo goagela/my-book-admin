@@ -1,10 +1,11 @@
-import BookForm from "@/components/BookForm";
+
+import CategoryForm from "@/components/CategoryForm";
 import Content from "@/components/Content";
 
 export default function Home() {
   return (
-    <Content title='图书添加'>
-      <BookForm></BookForm>
+    <Content title='分类编辑'>
+      <CategoryForm></CategoryForm>
     </Content>
   )
 }

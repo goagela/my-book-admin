@@ -10,7 +10,7 @@ export interface BookCreateType {
   author: string,
   category: string,
   cover: string,
-  publishedAt: numver,
+  publishedAt: number,
   stock: number,
   description: string
 }

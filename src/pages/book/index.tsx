@@ -1,4 +1,5 @@
 import { bookDelete, getBookList } from "@/api/book";
+import { getCategoryList } from "@/api/category";
 import Content from "@/components/Content";
 import { BookQueryType, CategoryQueryType } from "@/type";
 import { Button, Col, Form, Input, Row, Select, Space, Table, Image, Modal, message } from "antd";
@@ -33,8 +34,8 @@ export default function BookPage() {
       setBookDataSource(res.data)
     })
   }
-  const handleBookEdit = () => {
-    router.push('/book/edit/id')
+  const handleBookEdit = (id: string) => {
+    router.push(`/book/edit/${id}`)
   }
   const handleTableChange = (newPagination: any) => {
     setPagination(newPagination)
@@ -46,13 +47,7 @@ export default function BookPage() {
     })
   }
 
-  const options =
-    [
-      { value: 'jack', label: 'Jack' },
-      { value: 'lucy', label: 'Lucy' },
-      { value: 'Yiminghe', label: 'yiminghe' },
-      { value: 'disabled', label: 'Disabled', disabled: true },
-    ]
+  const [categoryList, setCategoryList] = useState<CategoryQueryType[]>()
   const handleBookDelete = (row: any) => {
     Modal.confirm({
       title: `确认删除书籍《${row.name}》吗？`,
@@ -77,6 +72,9 @@ export default function BookPage() {
   }
   useEffect(() => {
     fetchData()
+    getCategoryList().then(res => {
+      setCategoryList(res.data.map((item: any) => ({ label: item.name, value: item._id })))
+    })
   }, [])
 
   const [dataSource, setDataSource] = useState<any>([])
@@ -150,7 +148,9 @@ export default function BookPage() {
       minwidth: 100,
       render: (_: any, row: any) => (
         <Space size="middle">
-          <Button onClick={handleBookEdit} color="primary" variant='link'>编辑</Button>
+          <Button color="primary" variant='link' onClick={() => {
+            handleBookEdit(row._id)
+          }}>编辑</Button>
           <Button color="danger" variant='link' onClick={() => {
             handleBookDelete(row)
           }}>删除</Button>
@@ -189,7 +189,7 @@ export default function BookPage() {
           </Col>
           <Col span={3}>
             <Form.Item name="category" label="分类" >
-              <Select showSearch placeholder="请选择" options={options} allowClear />
+              <Select showSearch placeholder="请选择" options={categoryList} allowClear />
             </Form.Item>
           </Col>
           <Col span={4}>
