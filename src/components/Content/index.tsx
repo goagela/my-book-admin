@@ -25,4 +25,4 @@ export default function Content({ children, title, btn, route }: { children: Rea
     </>
   )
 }
-//主内容区组件
+//主内容区(灰色背景区内）组件

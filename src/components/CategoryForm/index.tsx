@@ -52,7 +52,6 @@ export default function BookPage() {
         labelCol={{ span: 2 }}
         wrapperCol={{ span: 20 }}
         layout="horizontal"
-
       >
         <Form.Item label="名称" name='name' rules={[{ required: true, message: '请输入名称' }]}>
           <Input placeholder='请输入' />
