@@ -1,15 +1,10 @@
-import styles from "@/styles/Home.module.css";
-
-import { Inter } from "next/font/google";
-import Head from "next/head";
-import Image from "next/image";
-
-const inter = Inter({ subsets: ["latin"] });
+import BorrowForm from "@/components/BorrowForm";
+import Content from "@/components/Content";
 
 export default function BookPage() {
   return (
-    <>
-      borrowadd
-    </>
+    <Content title='借阅添加'>
+      <BorrowForm></BorrowForm>
+    </Content>
   );
 }

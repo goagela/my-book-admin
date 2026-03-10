@@ -14,6 +14,10 @@ export async function borrowAdd() {
   const res: any = await request.post('/api/borrows')
   return res
 }
+export async function borrowEdit(params?: any) {
+  const res: any = await request.post('/api/borrows')
+  return res
+}
 
 export async function borrowDelete(id: string) {
   const res: any = await request.delete(`/api/borrows/${id}`)

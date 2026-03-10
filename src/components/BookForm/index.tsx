@@ -12,16 +12,15 @@ import {
 } from 'antd';
 import { BookCreateType, CategoryQueryType } from '@/type';
 import { bookAdd } from '@/api/book';
-import { log } from 'console';
 import { useRouter } from 'next/router';
 import styles from './index.module.css'
 import dayjs from 'dayjs';
 import { getCategoryList } from '@/api/category';
 
-const { RangePicker } = DatePicker;
+
 const { TextArea } = Input;
 
-export default function BookPage() {
+export default function BookForm() {
   const [form] = Form.useForm()
   const [preImage, setPreImage] = useState('')
   const router = useRouter()
@@ -62,7 +61,7 @@ export default function BookPage() {
         </Form.Item>
         <Form.Item label="封面" name='cover'>
           <Space.Compact style={{ marginBottom: 10 }}>
-            <Input placeholder='请输入' onChange={(e) => {
+            <Input placeholder='请输入图片url' onChange={(e) => {
               form.setFieldValue('cover', e.target.value)
             }} />
             <Button
