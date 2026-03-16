@@ -99,7 +99,7 @@ export default function BorrowPage() {
   ))
   const statusOptions = [
     { label: '借出', value: 'on' },
-    { label: '归还', value: 'off' },
+    { label: '已归还', value: 'off' },
   ]
 
   const fetchData = (params?: any) => {
