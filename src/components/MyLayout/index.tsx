@@ -4,6 +4,7 @@ import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme, Dropdown, Space, message } from 'antd';
 import styles from './index.module.css'
 import Image from 'next/image';
+import Link from 'next/link';
 import { log } from 'console';
 import { useRouter } from 'next/router';
 import { spawn } from 'child_process';
@@ -50,7 +51,7 @@ export default function MyLayout({ children }: { children: React.ReactNode }) {
 
   const userItems: MenuProps['items'] = [
     {
-      label: (<a href='/user/edit/id'>用户中心</a>),
+      label: (<Link href='/user/edit/id'>用户中心</Link>),
       key: '1',
     },
     {
