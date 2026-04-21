@@ -44,6 +44,9 @@ export default function BookPage() {
       current: newPagination.current,
       pageSize: newPagination.pageSize,
       ...query
+    }).then(res => {
+      setBookDataSource(res.data)
+      setPagination(prev => ({ ...prev, total: res.total }))
     })
   }
 

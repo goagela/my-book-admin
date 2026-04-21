@@ -56,9 +56,9 @@ export default function BookForm() {
         <Form.Item label="作者" name='author' rules={[{ required: true, message: '请输入作者' }]}>
           <Input placeholder='请输入' />
         </Form.Item>
-        <Form.Item label="分类" name='category' rules={[{ required: true, message: '请选择分类' }]}>
+        {/* <Form.Item label="分类" name='category' rules={[{ required: true, message: '请选择分类' }]}>
           <Select placeholder='请选择' options={categoryList} />
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item label="封面" name='cover'>
           <Space.Compact style={{ marginBottom: 10 }}>
             <Input placeholder='请输入图片url' onChange={(e) => {
