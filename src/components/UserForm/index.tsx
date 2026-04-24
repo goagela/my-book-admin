@@ -25,9 +25,9 @@ export default function UserForm({ editData }: { editData?: UserCreateType }) {
     router.push('/user')
   }
   useEffect(() => {
-    form.setFieldsValue(editData)
-
-
+    if (editData) {
+      form.setFieldsValue(editData)
+    }
   }, [editData])
 
   return (
