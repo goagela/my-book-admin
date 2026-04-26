@@ -39,7 +39,10 @@ export default function BookForm({ editData }: { editData?: any }) {
   }
   useEffect(() => {
     if (editData) {
-      form.setFieldsValue(editData)
+      form.setFieldsValue({
+        ...editData,
+        publishedAt: editData.publishedAt ? dayjs(editData.publishedAt) : undefined,
+      })
     }
     getCategoryList().then((res: any) => {
       setCategoryList(res.data.map((item: any) => ({ label: item.name, value: item._id })))

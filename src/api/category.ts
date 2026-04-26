@@ -19,3 +19,11 @@ export async function categoryDelete(id: string) {
   return res
 }
 
+export async function getCategoryDetail(id: string) {
+  const res: any = await request.get(`/api/categories/${id}`)
+  return res
+}
+export async function categoryUpdate(id: string, params: CategoryCreateType) {
+  const res: any = await request.put(`/api/categories/${id}`, params)
+  return res
+}
