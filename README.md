@@ -25,4 +25,8 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 ## 后端地址
 https://github.com/goagela/book-admin-express
 
+## 注意事项
+main分支使用mock数据，node分支为前后端分离项目正式代码
+
+
 
